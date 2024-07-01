@@ -17,7 +17,15 @@ const ContactSchema = new mongoose.Schema({
     message: String
 });
 
+const PlaceSchema = new mongoose.Schema({
+    name: String,
+    address: String,
+    contact: String,
+    hours: String
+});
+
 const Contact = mongoose.model('Contact', ContactSchema);
+const Place = mongoose.model('Place', PlaceSchema);
 
 app.post('/api/contact', (req, res) => {
     const newContact = new Contact(req.body);
@@ -26,6 +34,27 @@ app.post('/api/contact', (req, res) => {
             res.status(500).send(err);
         } else {
             res.status(200).send('Contact saved successfully!');
+        }
+    });
+});
+
+app.post('/api/place', (req, res) => {
+    const newPlace = new Place(req.body);
+    newPlace.save((err) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send('Place saved successfully!');
+        }
+    });
+});
+
+app.get('/api/places', (req, res) => {
+    Place.find({}, (err, places) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).json(places);
         }
     });
 });
